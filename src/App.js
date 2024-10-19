@@ -7,7 +7,7 @@ import Navbar from "./components/Navbar";
 
 function App() {
   return (
-   <div>
+   <div className="bg-slate-300">
         <Navbar/>
         <Routes>
           <Route path="/" element={<SignUp/>}/>
