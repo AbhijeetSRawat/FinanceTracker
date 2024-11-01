@@ -1,4 +1,25 @@
+import { useNavigate } from "react-router-dom";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from "../firebase";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
+
 const Navbar = () => {
+
+    const navigate=useNavigate();
+
+    const [user, loading] = useAuthState(auth);
+
+    useEffect(()=>{
+        if(user){
+            navigate("/dashboard")
+        }
+    }, [user, loading])
+
+    const logoutfunction =()=>{
+        toast.success("User LoggedOut")
+    }
+
     return ( 
         <div className="bg-black text-white h-[5vh] md:h-[8vh] flex justify-between items-center">
             <div className="flex items-center">
@@ -7,9 +28,12 @@ const Navbar = () => {
                     PennyTrack
                 </div>
             </div>
-            <div className="opacity-70 hover:opacity-100 md:text-xl mr-2">
+        {
+            user &&
+            <button onClick={logoutfunction} className="opacity-70 hover:opacity-100 md:text-xl mr-2">
                 LogOut
-            </div>
+            </button>
+        }
         </div>
      );
 }

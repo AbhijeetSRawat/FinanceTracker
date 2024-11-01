@@ -6,12 +6,13 @@ import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 
 function App() {
+
   return (
    <div className="bg-slate-300">
-        <Navbar/>
+        <Navbar />
         <Routes>
-          <Route path="/" element={<SignUp/>}/>
-          <Route path="/login" element={<LogIn/>}/>
+          <Route path="/" element={<SignUp  />}/>
+          <Route path="/login" element={<LogIn  />}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
           <Route path="*" element={<NotFound/>}/>
         </Routes>

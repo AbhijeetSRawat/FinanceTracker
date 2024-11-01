@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { NavLink } from "react-router-dom";
-import {  createUserWithEmailAndPassword } from "firebase/auth";
+import { NavLink, useNavigate } from "react-router-dom";
+import {  createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
-import { auth } from "../firebase";
+import { auth, db, provider } from "../firebase";
+import { GoogleAuthProvider } from "firebase/auth/web-extension";
 
 const SignUp = () => {
 
@@ -15,6 +17,8 @@ const SignUp = () => {
     })
     const [loading,setLoading]=useState(false);
 
+    const navigate=useNavigate();
+
     const changeHandler =(e)=>{
         setFormData(prevFormData =>{
             return{
@@ -24,11 +28,74 @@ const SignUp = () => {
         })
     }
 
-    function createDoc(user){
+    async function createDoc(user){
         //document about the user
+
+        if(!user){
+            return;
+        }
+        setLoading(true);
+        const userRef=doc(db,"users",user.uid);
+        const userData=await getDoc(userRef);
+
+        if(!userData.exists()){
+            try{
+                await setDoc(doc(db, "users", user.uid), {
+                    name:user.displayName ? user.displayName: formData.fullName,
+                    email:user.email,
+                    photoURL:user.photoURL?user.photoURL:"",
+                    createdAt:new Date(),
+                });
+                setLoading(false);
+            }
+            catch(e){
+                toast.error(e.message);
+                setLoading(false);
+            }
+        }
+        else{
+            toast.error("Document already exist !");
+            setLoading(false);
+        }
+        
     }
 
-    function SignUpWithEmail(e){
+    function signUpWithGoogle(){
+        setLoading(true);
+
+        try {
+            signInWithPopup(auth, provider)
+            .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // The signed-in user info.
+                const user = result.user;
+                // IdP data available using getAdditionalUserInfo(result)
+                setLoading(false);
+                createDoc(user);
+                toast.success("Welcome to PennyTrack!");
+                navigate("/dashboard")
+                // ...
+            }).catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                setLoading(false);
+                toast.error(errorCode+errorMessage);
+                // ...
+            });
+        } catch (e) {
+            setLoading(false);
+            toast.error(e.message);
+        }
+    }
+
+    function SignUpWithEmail(){
         // authenticate the user
             
         if(formData.name !== "" && formData.email !== "" && formData.password !== "" && formData.confirmPassword !== ""){
@@ -40,7 +107,7 @@ const SignUp = () => {
                     // Signed up 
                     const user = userCredential.user;
                     console.log(user);
-                    toast.success("User Created");
+                    toast.success("Welcome to PennyTrack!");
                     setLoading(false);
                     setFormData({
                         fullName:"",
@@ -49,6 +116,7 @@ const SignUp = () => {
                         confirmPassword:""
                     });
                     createDoc(user);
+                    navigate("/dashboard");
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -62,7 +130,7 @@ const SignUp = () => {
             }
         }
         else{
-            toast.error("Fill all the details")
+            toast.error("All the details are mandotary!")
         }
     }
 
@@ -118,7 +186,7 @@ const SignUp = () => {
                 <div className="flex flex-col items-center">
                     <button disabled={loading} className={(loading)?("h-[5vh] bg-gray-800  w-[81vw] lg:w-[25vw] rounded-lg"):("h-[5vh] bg-black w-[81vw] lg:w-[25vw] rounded-lg")}   onClick={SignUpWithEmail }>Sign Up</button>
                     <p className="font-semibold">or</p>
-                    <button className={(loading)?("h-[5vh] bg-gray-800 w-[81vw] lg:w-[25vw] rounded-lg flex justify-center items-center mb-4"):("h-[5vh] bg-black w-[81vw] lg:w-[25vw] rounded-lg flex justify-center items-center mb-4")}>Sign Up with <FcGoogle className={(loading)?("opacity-50 mx-1"):("opacity-100 mx-1")} size="25px"/> Google</button>
+                    <button onClick={signUpWithGoogle} className={(loading)?("h-[5vh] bg-gray-800 w-[81vw] lg:w-[25vw] rounded-lg flex justify-center items-center mb-4"):("h-[5vh] bg-black w-[81vw] lg:w-[25vw] rounded-lg flex justify-center items-center mb-4")}>Sign Up with <FcGoogle className={(loading)?("opacity-50 mx-1"):("opacity-100 mx-1")} size="25px"/> Google</button>
 
                     <div>Already have an account. <NavLink className="text-black font-semibold" to="/Login">Click here</NavLink></div>
                 </div>
