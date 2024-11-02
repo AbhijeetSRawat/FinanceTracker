@@ -54,7 +54,8 @@ const SignUp = () => {
             }
         }
         else{
-            toast.error("Document already exist !");
+            toast.success("Sir,You already have an acoount!");
+            toast.success("Your acoount is here.");
             setLoading(false);
         }
         
