@@ -1,7 +1,9 @@
+import Cards from "../components/Cards";
+
 const Dashboard = () => {
     return ( 
         <div>
-            Dashboard
+            <Cards/>
         </div>
      );
 }

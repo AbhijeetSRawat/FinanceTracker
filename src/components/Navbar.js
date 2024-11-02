@@ -3,6 +3,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from "../firebase";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import { signOut } from "firebase/auth";
 
 const Navbar = () => {
 
@@ -17,7 +18,19 @@ const Navbar = () => {
     }, [user, loading])
 
     const logoutfunction =()=>{
-        toast.success("User LoggedOut")
+        try{
+            signOut(auth).then(() => {
+                // Sign-out successful.
+                toast.success("LoggedOut Successfully!")
+                navigate("/")
+              }).catch((error) => {
+                // An error happened.
+                toast.error(error.message)
+              });
+        }
+        catch(e){
+            toast.error(e.message)
+        }
     }
 
     return ( 
