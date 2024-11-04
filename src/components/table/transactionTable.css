@@ -1,0 +1,14 @@
+.custom-radio-group .ant-radio-button-wrapper-checked {
+    background-color: black !important;
+    border-color: black !important;
+    color: white !important; /* White text when selected */
+  }
+  
+  .custom-radio-group .ant-radio-button-wrapper:not(.ant-radio-button-wrapper-checked) {
+    color: black !important; /* Black text when unselected */
+  }
+  
+  .custom-radio-group .ant-radio-button-wrapper:hover {
+    border-color: black !important;
+  }
+  
