@@ -35,7 +35,7 @@ const AddIncomeModal = ({isIncomeModal,handleIncomeModal,onFinish}) => {
 
                     <Form.Item
                         label="Amount"
-                        name="Amount"
+                        name="amount"
                         rules={[
                             {
                               required: true,
@@ -46,18 +46,7 @@ const AddIncomeModal = ({isIncomeModal,handleIncomeModal,onFinish}) => {
                         <Input type="number"/>
                     </Form.Item>
 
-                    <Form.Item
-                        label="Date"
-                        name="date"
-                        rules={[
-                            {
-                              required: true,
-                              message: "Please select the date of the income"
-                            },
-                          ]}
-                    >
-                        <DatePicker format="YYYY-MM-DD"/>
-                    </Form.Item>
+                    
 
                     <Form.Item
                         label="Tag"
@@ -76,6 +65,19 @@ const AddIncomeModal = ({isIncomeModal,handleIncomeModal,onFinish}) => {
                             <Select.Option value="profit">Profit</Select.Option>
                             <Select.Option value="others">Others</Select.Option>
                         </Select>
+                    </Form.Item>
+                    
+                    <Form.Item
+                        label="Date"
+                        name="date"
+                        rules={[
+                            {
+                              required: true,
+                              message: "Please select the date of the income"
+                            },
+                          ]}
+                    >
+                        <DatePicker format="YYYY-MM-DD"/>
                     </Form.Item>
 
                     <Form.Item>

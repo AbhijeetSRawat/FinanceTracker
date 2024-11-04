@@ -1,16 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cards from "../components/Cards";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, getDocs } from "firebase/firestore";
 import AddExpensesModal from "../components/modals/AddExpensesModal";
 import AddIncomeModal from "../components/modals/AddIncomeModal";
 import { auth, db } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import toast from "react-hot-toast";
-import moment from "moment";
+import TransactionTable from "../components/table/transactionTable";
+import Loader from "../components/Loader/Loader";
+
 
 const Dashboard = () => {
 
     const [user] = useAuthState(auth);// destruct it as it contains a array and we want just user
+    
+    const [loading,setLoading]=useState(false);
+
+    const [transactions,setTransactions]=useState([]);
+
+    async function fetchTransactions(){
+        setLoading(true);
+        if(user){
+           
+            try{
+                const q = query(collection(db, `users/${user.uid}/transactions`));
+
+            const querySnapshot = await getDocs(q);
+            let transactionsArray=[];
+            querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+                transactionsArray.push(doc.data());
+            });
+
+            setTransactions(transactionsArray);
+            }
+            catch(e){
+                toast.error(e.message);
+            }
+        }
+        setLoading(false);
+    }
+
+    useEffect(()=>{
+        fetchTransactions();
+    },[user]);
 
     const [isExpenseModal,setIsExpenseModal]=useState(false);
     const [isIncomeModal,setIsIncomeModal]=useState(false);
@@ -36,6 +69,10 @@ const Dashboard = () => {
             const docRef = await addDoc(collection(db, `users/${user.uid}/transactions`),transaction);
             console.log("Document written with ID: ", docRef.id);
             toast.success("Transaction Added !")
+
+            //transaction update
+            setTransactions([...transactions, transaction]);
+
             handleExpenseModal();
             handleIncomeModal();
         }
@@ -48,23 +85,59 @@ const Dashboard = () => {
     function onFinish(values,type){
         const newTransaction={
             type:type,
-            date:moment(values.date).format("YYYY-MM-DD"),
+            date:values.date.format("YYYY-MM-DD"),
             amount:parseFloat(values.amount),
             tag:values.tag,
             name:values.name
         }
+        console.log(newTransaction)
         addTransaction(newTransaction);
     };
 
+    const [totalBalance,setTotalBalance]=useState(0);
+    const [income,setIncome]=useState(0);
+    const [expense,setExpense]=useState(0);
+
+    useEffect(()=>{
+        let totalincome=0;
+        let totalexpense=0;
+
+        transactions.forEach((transaction)=>{
+            if(transaction.type === "Income"){
+                totalincome+=transaction.amount;
+            }
+            else{
+                totalexpense+=transaction.amount;
+            }
+        })
+
+        setIncome(totalincome);
+        setExpense(totalexpense);
+        setTotalBalance((totalincome - totalexpense));
+    },[transactions])
+    
     return ( 
         <div>
+            {
+                    loading?(<div className="w-[100vw] h-[95vh] flex justify-center items-center"> 
+                        <Loader />
+                    </div>):(
+                        
+                        <div>
+
+                            <Cards showExpenseModal={showExpenseModal} showIncomeModal={showIncomeModal} income={income} expense={expense} totalBalance={totalBalance}/>
+        
+                            <AddExpensesModal isExpenseModal={isExpenseModal} handleExpenseModal={handleExpenseModal} onFinish={onFinish}/>
+        
+                            <AddIncomeModal isIncomeModal={isIncomeModal} handleIncomeModal={handleIncomeModal} onFinish={onFinish}/>
+        
+                            <TransactionTable transactions={transactions}/>
+    
+                        </div>)
+                    
+                
+            }
             
-            <Cards showExpenseModal={showExpenseModal} showIncomeModal={showIncomeModal}/>
-
-            <AddExpensesModal isExpenseModal={isExpenseModal} handleExpenseModal={handleExpenseModal} onFinish={onFinish}/>
-
-            <AddIncomeModal isIncomeModal={isIncomeModal} handleIncomeModal={handleIncomeModal} onFinish={onFinish}/>
-
             
         </div>
      );

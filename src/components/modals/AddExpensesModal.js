@@ -34,7 +34,7 @@ const AddExpensesModal = ({isExpenseModal,handleExpenseModal,onFinish}) => {
 
                     <Form.Item
                         label="Amount"
-                        name="Amount"
+                        name="amount"
                         rules={[
                             {
                               required: true,
@@ -45,19 +45,7 @@ const AddExpensesModal = ({isExpenseModal,handleExpenseModal,onFinish}) => {
                         <Input type="number"/>
                     </Form.Item>
 
-                    <Form.Item
-                        label="Date"
-                        name="date"
-                        rules={[
-                            {
-                              required: true,
-                              message: "Please select the date of the expense"
-                            },
-                          ]}
-                    >
-                        <DatePicker format="YYYY-MM-DD"/>
-                    </Form.Item>
-
+                    
                     <Form.Item
                         label="Tag"
                         name="tag"
@@ -76,6 +64,19 @@ const AddExpensesModal = ({isExpenseModal,handleExpenseModal,onFinish}) => {
                             <Select.Option value="Office">Office</Select.Option>
                             <Select.Option value="Others">Others</Select.Option>
                         </Select>
+                    </Form.Item>
+                    
+                    <Form.Item
+                        label="Date"
+                        name="date"
+                        rules={[
+                            {
+                              required: true,
+                              message: "Please select the date of the expense"
+                            },
+                          ]}
+                    >
+                        <DatePicker format="YYYY-MM-DD"/>
                     </Form.Item>
 
                     <Form.Item>
