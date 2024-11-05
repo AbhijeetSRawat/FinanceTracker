@@ -8,7 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import toast from "react-hot-toast";
 import TransactionTable from "../components/table/transactionTable";
 import Loader from "../components/Loader/Loader";
-
+import React from "react";
 
 const Dashboard = () => {
 

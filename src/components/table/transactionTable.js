@@ -4,7 +4,6 @@ import React from 'react';
 import { Flex, Radio, Button } from 'antd';
 import './transactionTable.css'
 import { parse, unparse } from 'papaparse';
-import moment from 'moment';
 import toast from 'react-hot-toast';
 
 const TransactionTable = ({ transactions ,addTransaction, fetchTransactions }) => {
