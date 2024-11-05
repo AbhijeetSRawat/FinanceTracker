@@ -63,12 +63,12 @@ const Dashboard = () => {
     }
 
      
-    async function addTransaction(transaction){
+    async function addTransaction(transaction,many){
         try{
             // Add a new document with a generated id.
             const docRef = await addDoc(collection(db, `users/${user.uid}/transactions`),transaction);
             console.log("Document written with ID: ", docRef.id);
-            toast.success("Transaction Added !")
+            if(!many) toast.success("Transaction Added !")
 
             //transaction update
             setTransactions([...transactions, transaction]);
@@ -77,7 +77,7 @@ const Dashboard = () => {
             handleIncomeModal();
         }
         catch(e){
-            toast.error("Unable to Add Transaction")
+            if(!many) toast.error("Unable to Add Transaction")
         }
     }
 
@@ -131,7 +131,7 @@ const Dashboard = () => {
         
                             <AddIncomeModal isIncomeModal={isIncomeModal} handleIncomeModal={handleIncomeModal} onFinish={onFinish}/>
         
-                            <TransactionTable transactions={transactions}/>
+                            <TransactionTable transactions={transactions} addTransaction={addTransaction} fetchTransactions={fetchTransactions}/>
     
                         </div>)
                     

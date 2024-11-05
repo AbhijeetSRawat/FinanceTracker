@@ -3,10 +3,11 @@ import { useState } from 'react';
 import React from 'react';
 import { Flex, Radio, Button } from 'antd';
 import './transactionTable.css'
-import { unparse } from 'papaparse';
+import { parse, unparse } from 'papaparse';
 import moment from 'moment';
+import toast from 'react-hot-toast';
 
-const TransactionTable = ({ transactions }) => {
+const TransactionTable = ({ transactions ,addTransaction, fetchTransactions }) => {
 
   const [search,setSearch]=useState("");
   const [typeFilter,setTypeFilter]=useState("");
@@ -75,6 +76,35 @@ const TransactionTable = ({ transactions }) => {
       document.body.removeChild(link);
     }
 
+    async function importFromCSV(event) {
+      event.preventDefault();
+    
+      try {
+        parse(event.target.files[0], {
+          header: true,
+          complete: async function (results) {
+            const transactionPromises = results.data.map(transaction => {
+              const newTransaction = {
+                ...transaction,
+                amount: parseFloat(transaction.amount), // Ensure amount is correctly parsed as float
+              };
+              // Push each `addTransaction` call into a promise array
+              return addTransaction(newTransaction, true);
+            });
+    
+            // Wait for all transactions to be added
+            await Promise.all(transactionPromises);
+    
+            toast.success("All Transactions Added!");
+            fetchTransactions();
+            event.target.value = ""; // Clear input field to allow re-uploading the same file if needed
+          },
+        });
+      } catch (e) {
+        toast.error(e.message);
+      }
+    }
+
     return (
       <div>
           <div className='flex flex-col lg:flex-row mt-4'>
@@ -117,10 +147,17 @@ const TransactionTable = ({ transactions }) => {
               
             </Flex>
 
-            <Flex gap="small" className='mt-3 ' wrap>
-              <Button className='bg-black ' onClick={exportCSV} type="primary">Export CSV</Button>
-              <Button className='bg-black ' type="primary">Import CSV</Button>
-            </Flex>
+            <div className='flex'>
+              <Flex gap="small" className='mt-3 ' wrap>
+                <Button className='bg-black ' onClick={exportCSV} type="primary">Export CSV</Button>
+              </Flex>
+
+              <div className='flex mt-3'>
+                  <label htmlFor="file-csv" className='ml-2 bg-black w-24 flex justify-center items-center rounded-md text-sm pb-1 hover:bg-blue-500 cursor-pointer text-white ' >Import CSV</label>
+                  <input type="file" hidden id='file-csv' accept='.csv' onChange={importFromCSV} required />
+              </div>
+            </div>
+            
 
           </div>
           
