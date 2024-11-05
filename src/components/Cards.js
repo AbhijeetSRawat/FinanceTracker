@@ -1,5 +1,6 @@
 import { Card, Row } from "antd";
-import React from "react";
+import React from 'react';
+
 const Cards = ({showExpenseModal,showIncomeModal,income,expense,totalBalance}) => {
     return ( 
         <div>

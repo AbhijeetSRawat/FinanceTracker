@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
 import Loader from "./components/Loader/Loader";
+import React from 'react';
 
 function App() {
   const navigate=useNavigate();

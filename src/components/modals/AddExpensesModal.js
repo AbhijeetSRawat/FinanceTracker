@@ -1,4 +1,5 @@
 import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
+import React from 'react';
 
 const AddExpensesModal = ({isExpenseModal,handleExpenseModal,onFinish}) => {
 

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import toast from "react-hot-toast";
 import { signOut } from "firebase/auth";
+import React from 'react';
 
 const Navbar = ({user,loading}) => {
 

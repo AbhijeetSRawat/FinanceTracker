@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom"
 import { auth, provider } from "../firebase";
 import toast from "react-hot-toast";
 import { GoogleAuthProvider } from "firebase/auth/web-extension";
+import React from 'react';
 
 const LogIn = () => {
 

@@ -6,6 +6,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { auth, db, provider } from "../firebase";
 import { GoogleAuthProvider } from "firebase/auth/web-extension";
+import React from 'react';
 
 const SignUp = () => {
 

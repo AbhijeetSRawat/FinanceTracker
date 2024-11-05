@@ -1,3 +1,5 @@
+import React from 'react';
+
 const NotFound = () => {
     return ( 
         <div className=" h-[95vh] flex justify-center items-center">

@@ -6,6 +6,7 @@ import './transactionTable.css'
 import { parse, unparse } from 'papaparse';
 import toast from 'react-hot-toast';
 
+
 const TransactionTable = ({ transactions ,addTransaction, fetchTransactions }) => {
 
   const [search,setSearch]=useState("");
