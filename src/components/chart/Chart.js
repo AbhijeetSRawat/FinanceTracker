@@ -56,24 +56,12 @@ const Charts = ({transactions}) => {
         },
       };
 
-      let chart;
-    
-      // Export Image
-      const downloadImage = () => {
-        chart?.downloadImage();
-      };
-    
-      // Get chart base64 string
-      const toDataURL = () => {
-        console.log(chart?.toDataURL());
-      };
-
     return ( 
         <div >
         {isSmallScreen ? (
-            <Line className="w-[95vw] ml-2 shadow-lg rounded-lg bg-white" {...config2} onReady={(chartInstance) => (chart = chartInstance)} />
+            <Line className="w-[95vw] ml-2 shadow-lg rounded-lg bg-white" {...config2}  />
          ) : (
-            <Line className="w-[97vw] ml-3 shadow-lg rounded-lg bg-white" {...config1} onReady={(chartInstance) => (chart = chartInstance)} />
+            <Line className="w-[97vw] ml-3 shadow-lg rounded-lg bg-white" {...config1}  />
       )}
     </div>
      );
