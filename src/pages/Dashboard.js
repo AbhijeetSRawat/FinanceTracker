@@ -10,6 +10,8 @@ import TransactionTable from "../components/table/transactionTable";
 import Loader from "../components/Loader/Loader";
 import React from "react";
 
+
+
 const Dashboard = () => {
 
     const [user] = useAuthState(auth);// destruct it as it contains a array and we want just user
@@ -116,6 +118,8 @@ const Dashboard = () => {
         setTotalBalance((totalincome - totalexpense));
     },[transactions])
     
+   
+
     return ( 
         <div>
             {
@@ -126,7 +130,9 @@ const Dashboard = () => {
                         <div>
 
                             <Cards showExpenseModal={showExpenseModal} showIncomeModal={showIncomeModal} income={income} expense={expense} totalBalance={totalBalance}/>
-        
+
+                            
+
                             <AddExpensesModal isExpenseModal={isExpenseModal} handleExpenseModal={handleExpenseModal} onFinish={onFinish}/>
         
                             <AddIncomeModal isIncomeModal={isIncomeModal} handleIncomeModal={handleIncomeModal} onFinish={onFinish}/>

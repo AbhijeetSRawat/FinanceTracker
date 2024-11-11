@@ -5,6 +5,7 @@ import { Flex, Radio, Button } from 'antd';
 import './transactionTable.css'
 import { parse, unparse } from 'papaparse';
 import toast from 'react-hot-toast';
+import Charts from '../chart/Chart';
 
 
 const TransactionTable = ({ transactions ,addTransaction, fetchTransactions }) => {
@@ -107,6 +108,12 @@ const TransactionTable = ({ transactions ,addTransaction, fetchTransactions }) =
 
     return (
       <div>
+          {
+            (filteredSortedArray.length >0)?( <Charts transactions={filteredSortedArray}/>):(<div className='w-[95vw] lg:w-[97vw] h-[30vh] text-2xl lg:text-5xl font-bold flex justify-center items-center bg-slate-400 p-2 ml-2 lg:ml-3 rounded-md shadow-lg'>No Transactions to display</div>)
+             
+          }
+         
+
           <div className='flex flex-col lg:flex-row mt-4'>
               
               <div className='flex mb-2 p-2'>
